@@ -1,27 +1,22 @@
 const express = require("express");
+const {
+  leerUrls,
+  agregarUrl,
+  eliminarUrl,
+  editarUrlForm,
+  editarUrl,
+  redirection,
+} = require("../controllers/homeController");
+const urlValidator = require("../middlewares/urlValidator");
+const userVerification = require("../middlewares/userVerification");
+
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  const urls = [
-    {
-      origin: "www.google.com/loremipsumdorem-loremipsumdorem",
-      shortUrl: "short.com/1",
-    },
-    {
-      origin: "www.twitter44.com/loremipsumdorem-twitter44",
-      shortUrl: "short.com/2",
-    },
-    {
-      origin: "www.myblogurl.com/loremipsumdorem-myblogurl",
-      shortUrl: "short.com/3",
-    },
-    {
-      origin: "www.anotherlongurl.com/loremipsumdorem-anotherlongurl",
-      shortUrl: "short.com/4",
-    },
-  ];
-
-  res.render("home", { urls: urls });
-});
+router.get("/", userVerification, leerUrls);
+router.post("/", userVerification, urlValidator, agregarUrl);
+router.get("/editar/:id", userVerification, editarUrlForm);
+router.post("/editar/:id", userVerification, urlValidator, editarUrl);
+router.get("/eliminar/:id", userVerification, eliminarUrl);
+router.get("/:shortURL", redirection);
 
 module.exports = router;
